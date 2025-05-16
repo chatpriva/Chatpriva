@@ -46,15 +46,35 @@
       margin-top: 15px;
       border-radius: 12px;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container hidden" id="uploadPage">
+    <h2>Upload de Imagem (senha: 458)</h2>
+    <input type="password" id="senha" placeholder="Digite a senha" />
+    <input type="file" id="imagemInput" accept="image/*" />
+    <button onclick="enviarImagem()">Enviar</button>
+    <div id="uploadResultado"></div>
+  </div>  <div class="container" id="cofrePage">
     <h2>Digite o código para revelar a imagem</h2>
     <input type="text" id="codigo" placeholder="Código da imagem" />
     <button onclick="buscarImagem()">Revelar</button>
+    <button onclick="mostrarUpload()">Fazer Upload</button>
     <div id="resultado"></div>
   </div>  <script>
+    function mostrarUpload() {
+      const senha = prompt("Digite a senha para acessar o upload:");
+      if (senha === "458") {
+        document.getElementById("cofrePage").classList.add("hidden");
+        document.getElementById("uploadPage").classList.remove("hidden");
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+
     async function buscarImagem() {
       const codigo = document.getElementById('codigo').value.trim();
       const resultado = document.getElementById('resultado');
@@ -70,6 +90,25 @@
       } catch (err) {
         resultado.innerHTML = 'Erro ao buscar imagem.';
       }
+    }
+
+    async function enviarImagem() {
+      const fileInput = document.getElementById("imagemInput");
+      const resultado = document.getElementById("uploadResultado");
+
+      if (!fileInput.files.length) {
+        resultado.innerText = "Selecione uma imagem.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const codigo = Math.random().toString(36).substring(2, 10);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("name", `${codigo}.jpg`);
+
+      resultado.innerText = "Enviando imagem... (essa parte precisa ser feita com backend como Firebase ou Supabase)";
+      resultado.innerHTML += `<br>O código gerado é: <strong>${codigo}</strong>`;
     }
   </script></body>
 </html>
