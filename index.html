@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChatPrivado VaultBox</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #222;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .message {
+      background: white;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 70%;
+    }
+    .me {
+      background: #dcf8c6;
+      align-self: flex-end;
+    }
+    form {
+      display: flex;
+      padding: 1rem;
+      background: #fff;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #0084ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>VaultBox Chat Privado</h2>
+  </header>
+  <div id="chat"></div>
+  <form id="message-form">
+    <input type="text" id="message-input" placeholder="Digite sua mensagem..." autocomplete="off"/>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabaseUrl = 'https://birwaspfxawbpekpaqpk.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpcndhc3BmeGF3YnBla3BhcXBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczODY0NDMsImV4cCI6MjA2Mjk2MjQ0M30.32GsuRNRdJi7v_lHklC1hB7OxSG6F-AcHD_QBF0CpVs';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const chat = document.getElementById('chat');
+    const form = document.getElementById('message-form');
+    const input = document.getElementById('message-input');
+
+    const loadMessages = async () => {
+      const { data, error } = await supabase
+        .from('mensagens')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (data) {
+        chat.innerHTML = '';
+        data.forEach(msg => {
+          const div = document.createElement('div');
+          div.className = 'message';
+          div.textContent = msg.texto;
+          chat.appendChild(div);
+        });
+        chat.scrollTop = chat.scrollHeight;
+      }
+    };
+
+    const setupRealtime = () => {
+      supabase
+        .channel('public:mensagens')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensagens' }, payload => {
+          const msg = payload.new;
+          const div = document.createElement('div');
+          div.className = 'message';
+          div.textContent = msg.texto;
+          chat.appendChild(div);
+          chat.scrollTop = chat.scrollHeight;
+        })
+        .subscribe();
+    };
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (text !== '') {
+        await supabase.from('mensagens').insert([{ texto: text }]);
+        input.value = '';
+      }
+    });
+
+    loadMessages();
+    setupRealtime();
+  </script>
+</body>
+</html>
