@@ -1,1 +1,0 @@
-// Página para digitar código e ver imagem
