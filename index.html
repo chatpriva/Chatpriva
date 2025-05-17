@@ -1,178 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VaultBox - Chat Privado</title>
+  <meta charset="UTF-8">
+  <title>VaultBox Chat</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: #eee;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    #login {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #222;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    #chat {
-      display: none;
-      flex-direction: column;
-      height: 80vh;
-      width: 90vw;
-      max-width: 600px;
-      background: #333;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-    .message {
-      background: #0a84ff;
-      margin: 5px 0;
-      padding: 8px;
-      border-radius: 4px;
-      color: white;
-      word-wrap: break-word;
-    }
-    #inputArea {
-      display: flex;
-      padding: 10px;
-      background: #222;
-    }
-    #inputArea input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      color: #333;
-    }
-    #inputArea button {
-      margin-left: 10px;
-      padding: 10px 20px;
-      border: none;
-      background: #0a84ff;
-      color: white;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #errorMsg {
-      color: #f55;
-      display: none;
-    }
+    body { font-family: Arial; padding: 20px; background: #121212; color: white; }
+    #messages { max-height: 400px; overflow-y: scroll; margin-bottom: 10px; border: 1px solid #444; padding: 10px; }
+    .message { margin-bottom: 5px; }
+    input, button { padding: 10px; font-size: 16px; }
+    #sendBtn { background: #4CAF50; color: white; border: none; cursor: pointer; }
   </style>
 </head>
 <body>
+  <h2>VaultBox Chat</h2>
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Digite sua mensagem...">
+  <button id="sendBtn">Enviar</button>
 
-  <div id="login">
-    <h2>Digite a senha para entrar</h2>
-    <input type="password" id="passwordInput" placeholder="Senha" autocomplete="off" />
-    <button id="loginBtn">Entrar</button>
-    <p id="errorMsg">Senha incorreta</p>
-  </div>
-
-  <div id="chat">
-    <div id="messages"></div>
-    <div id="inputArea">
-      <input type="text" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off" />
-      <button id="sendBtn">Enviar</button>
-    </div>
-  </div>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBO66blfTWDG9PPmWddQs3n-Fmj6bufBow",
       authDomain: "vaultbox-876f9.firebaseapp.com",
+      databaseURL: "https://vaultbox-876f9-default-rtdb.firebaseio.com",
       projectId: "vaultbox-876f9",
       storageBucket: "vaultbox-876f9.appspot.com",
       messagingSenderId: "499854233557",
-      appId: "1:499854233557:web:e51d8c86a063868ae1b75c",
-      measurementId: "G-J32F24E9CM"
+      appId: "1:499854233557:web:e51d8c86a063868ae1b75c"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const db = firebase.database();
 
-    const correctPassword = '458';
+    const messagesRef = db.ref("messages");
 
-    const loginDiv = document.getElementById('login');
-    const chatDiv = document.getElementById('chat');
-    const errorMsg = document.getElementById('errorMsg');
-    const loginBtn = document.getElementById('loginBtn');
-    const passwordInput = document.getElementById('passwordInput');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const messagesDiv = document.getElementById('messages');
-
-    loginBtn.onclick = () => {
-      if (passwordInput.value === correctPassword) {
-        loginDiv.style.display = 'none';
-        chatDiv.style.display = 'flex';
-        startListeningMessages();
-      } else {
-        errorMsg.style.display = 'block';
+    document.getElementById("sendBtn").onclick = () => {
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+      if (message) {
+        messagesRef.push({ text: message });
+        input.value = "";
       }
     };
 
-    sendBtn.onclick = () => {
-      sendMessage();
-    };
-
-    messageInput.addEventListener("keyup", function(event) {
-      if (event.key === "Enter") {
-        sendMessage();
-      }
+    messagesRef.on("child_added", (data) => {
+      const msg = data.val().text;
+      const div = document.createElement("div");
+      div.className = "message";
+      div.textContent = msg;
+      document.getElementById("messages").appendChild(div);
     });
-
-    function sendMessage() {
-      const text = messageInput.value.trim();
-      if (text === '') return;
-      db.collection("messages").add({
-        text: text,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        messageInput.value = '';
-      })
-      .catch((error) => {
-        console.error("Erro ao enviar mensagem: ", error);
-      });
-    }
-
-    function startListeningMessages() {
-      db.collection("messages").orderBy("timestamp")
-        .onSnapshot((snapshot) => {
-          messagesDiv.innerHTML = "";
-          snapshot.forEach((doc) => {
-            const msg = doc.data();
-            const div = document.createElement("div");
-            div.className = "message";
-            div.textContent = msg.text;
-            messagesDiv.appendChild(div);
-          });
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        });
-    }
   </script>
-
 </body>
 </html>
