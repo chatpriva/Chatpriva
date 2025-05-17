@@ -1,1 +1,59 @@
-<!DOCTYPE html><html><head><title>VaultBox</title></head><body><div id='root'></div></body></html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bate-Papo UOL</title>
+    <link rel="stylesheet" href="./estilos/reset.css" />
+    <link rel="stylesheet" href="./estilos/style.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="./media/favico.ico" />
+</head>
+<body>
+    <div class="tela-preta escondido" onclick="fechaMenu()"></div>
+    <div class="menu-lateral">
+        <h1>Escolha um contato<br>para enviar mensagem</h1>
+        <div class="participantes"></div>
+        <h1>Escolha a visibilidade</h1>
+        <div class="visibilidades">
+            <div class="item-menu-lateral" onclick="registraVisibilidade(this)">
+                <ion-icon name="lock-open" class="icone-menu-lateral"></ion-icon>
+                <span>Público</span>
+                <ion-icon name="checkmark-outline" class="checkmark"></ion-icon>
+            </div>
+            <div class="item-menu-lateral" onclick="registraVisibilidade(this)"> 
+                <ion-icon name="lock-closed" class="icone-menu-lateral"></ion-icon>
+                <span>Reservadamente</span>
+                <ion-icon name="checkmark-outline" class="checkmark"></ion-icon>
+            </div>
+        </div>  
+    </div>
+    <div class="tela-entrada">
+        <img class="logo-entrada" src="./media/logo 2.png" alt="Logomarca do Bate-Papo UOL" />
+        <input class="login"type="text" placeholder="Digite o seu nome">
+        <button class="login-enter" onclick="verificaUsuario()">Entrar</button>
+    </div>
+    <header>
+        <div class="header-conteudo">
+            <img src="./media/logo 1.png" alt="Logomarca do Bate-Papo UOL" />
+            <ion-icon name="people" onclick="abreMenu()"></ion-icon>
+        </div>
+    </header>
+    <div class="mensagem-container">
+        <div class="mensagens"></div>
+    </div>
+    <footer>
+        <div class="footer-conteudo">
+            <div class="envio">
+                <input class="campo-mensagem" type="text" placeholder="Escreva aqui...">
+                <span class="descricao-mensagem">Enviando para Todos</span>
+            </div>
+            <ion-icon class="send" name="paper-plane-outline" onclick="enviaMensagem()"></ion-icon>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+
+    <script src="./scripts/script.js"></script>
+</body>
+      </html>
