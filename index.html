@@ -1,114 +1,61 @@
 <!DOCTYPE html><html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cofre Secreto</title>
+  <meta charset="UTF-8">
+  <title>Chat Privado</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #0e0e0e;
-      color: white;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #login {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      gap: 10px;
     }
-    .container {
-      text-align: center;
-      padding: 20px;
-      background: #1e1e1e;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-      max-width: 400px;
-      width: 90%;
-    }
-    input, button {
+    input[type="password"] {
       padding: 10px;
-      margin: 10px 0;
-      width: 100%;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    input {
-      background: #333;
-      color: white;
+      border-radius: 5px;
     }
     button {
-      background: #4caf50;
+      padding: 10px 20px;
+      background-color: #444;
       color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
-    img {
-      max-width: 100%;
-      margin-top: 15px;
-      border-radius: 12px;
-    }
-    .hidden {
+    #chat {
       display: none;
+      width: 100%;
+      height: 100vh;
     }
   </style>
 </head>
 <body>
-  <div class="container hidden" id="uploadPage">
-    <h2>Upload de Imagem (senha: 458)</h2>
-    <input type="password" id="senha" placeholder="Digite a senha" />
-    <input type="file" id="imagemInput" accept="image/*" />
-    <button onclick="enviarImagem()">Enviar</button>
-    <div id="uploadResultado"></div>
-  </div>  <div class="container" id="cofrePage">
-    <h2>Digite o código para revelar a imagem</h2>
-    <input type="text" id="codigo" placeholder="Código da imagem" />
-    <button onclick="buscarImagem()">Revelar</button>
-    <button onclick="mostrarUpload()">Fazer Upload</button>
-    <div id="resultado"></div>
+  <div id="login">
+    <h2>Digite a senha para acessar o chat</h2>
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="verificarSenha()">Entrar</button>
+  </div>  <div id="chat">
+    <div id="tlkio" data-channel="secreto458" style="width:100%;height:100vh;"></div>
+    <script async src="https://tlk.io/embed.js" type="text/javascript"></script>
   </div>  <script>
-    function mostrarUpload() {
-      const senha = prompt("Digite a senha para acessar o upload:");
-      if (senha === "458") {
-        document.getElementById("cofrePage").classList.add("hidden");
-        document.getElementById("uploadPage").classList.remove("hidden");
+    function verificarSenha() {
+      const senha = document.getElementById('senha').value;
+      if (senha === '458') {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('chat').style.display = 'block';
       } else {
-        alert("Senha incorreta!");
+        alert('Senha incorreta.');
       }
-    }
-
-    async function buscarImagem() {
-      const codigo = document.getElementById('codigo').value.trim();
-      const resultado = document.getElementById('resultado');
-      resultado.innerHTML = 'Buscando imagem...';
-
-      try {
-        const res = await fetch(`https://firebasestorage.googleapis.com/v0/b/SEU-PROJETO.appspot.com/o/${codigo}.jpg?alt=media`);
-        if (res.status === 200) {
-          resultado.innerHTML = `<img src="https://firebasestorage.googleapis.com/v0/b/SEU-PROJETO.appspot.com/o/${codigo}.jpg?alt=media" alt="Imagem revelada" />`;
-        } else {
-          resultado.innerHTML = 'Imagem não encontrada. Verifique o código.';
-        }
-      } catch (err) {
-        resultado.innerHTML = 'Erro ao buscar imagem.';
-      }
-    }
-
-    async function enviarImagem() {
-      const fileInput = document.getElementById("imagemInput");
-      const resultado = document.getElementById("uploadResultado");
-
-      if (!fileInput.files.length) {
-        resultado.innerText = "Selecione uma imagem.";
-        return;
-      }
-
-      const file = fileInput.files[0];
-      const codigo = Math.random().toString(36).substring(2, 10);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("name", `${codigo}.jpg`);
-
-      resultado.innerText = "Enviando imagem... (essa parte precisa ser feita com backend como Firebase ou Supabase)";
-      resultado.innerHTML += `<br>O código gerado é: <strong>${codigo}</strong>`;
     }
   </script></body>
 </html>
