@@ -1,59 +1,117 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bate-Papo UOL</title>
-    <link rel="stylesheet" href="./estilos/reset.css" />
-    <link rel="stylesheet" href="./estilos/style.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="./media/favico.ico" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VaultBox - Chat Privado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #login {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    #chat {
+      display: none;
+      flex-direction: column;
+      height: 80vh;
+      width: 90vw;
+      max-width: 600px;
+      background: #333;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    #inputArea {
+      display: flex;
+      padding: 10px;
+      background: #222;
+    }
+    #inputArea input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    #inputArea button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      background: #0a84ff;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="tela-preta escondido" onclick="fechaMenu()"></div>
-    <div class="menu-lateral">
-        <h1>Escolha um contato<br>para enviar mensagem</h1>
-        <div class="participantes"></div>
-        <h1>Escolha a visibilidade</h1>
-        <div class="visibilidades">
-            <div class="item-menu-lateral" onclick="registraVisibilidade(this)">
-                <ion-icon name="lock-open" class="icone-menu-lateral"></ion-icon>
-                <span>Público</span>
-                <ion-icon name="checkmark-outline" class="checkmark"></ion-icon>
-            </div>
-            <div class="item-menu-lateral" onclick="registraVisibilidade(this)"> 
-                <ion-icon name="lock-closed" class="icone-menu-lateral"></ion-icon>
-                <span>Reservadamente</span>
-                <ion-icon name="checkmark-outline" class="checkmark"></ion-icon>
-            </div>
-        </div>  
-    </div>
-    <div class="tela-entrada">
-        <img class="logo-entrada" src="./media/logo 2.png" alt="Logomarca do Bate-Papo UOL" />
-        <input class="login"type="text" placeholder="Digite o seu nome">
-        <button class="login-enter" onclick="verificaUsuario()">Entrar</button>
-    </div>
-    <header>
-        <div class="header-conteudo">
-            <img src="./media/logo 1.png" alt="Logomarca do Bate-Papo UOL" />
-            <ion-icon name="people" onclick="abreMenu()"></ion-icon>
-        </div>
-    </header>
-    <div class="mensagem-container">
-        <div class="mensagens"></div>
-    </div>
-    <footer>
-        <div class="footer-conteudo">
-            <div class="envio">
-                <input class="campo-mensagem" type="text" placeholder="Escreva aqui...">
-                <span class="descricao-mensagem">Enviando para Todos</span>
-            </div>
-            <ion-icon class="send" name="paper-plane-outline" onclick="enviaMensagem()"></ion-icon>
-        </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
 
-    <script src="./scripts/script.js"></script>
+  <div id="login">
+    <h2>Digite a senha para entrar</h2>
+    <input type="password" id="passwordInput" placeholder="Senha" />
+    <button onclick="checkPassword()">Entrar</button>
+    <p id="errorMsg" style="color: #f55; display: none;">Senha incorreta</p>
+  </div>
+
+  <div id="chat">
+    <div id="messages"></div>
+    <div id="inputArea">
+      <input type="text" id="messageInput" placeholder="Digite sua mensagem..." />
+      <button onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    const correctPassword = '458';
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      const errorMsg = document.getElementById('errorMsg');
+      if (input === correctPassword) {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('chat').style.display = 'flex';
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const messages = document.getElementById('messages');
+      if (input.value.trim() === '') return;
+
+      const msgDiv = document.createElement('div');
+      msgDiv.textContent = input.value;
+      msgDiv.style.background = '#0a84ff';
+      msgDiv.style.margin = '5px 0';
+      msgDiv.style.padding = '8px';
+      msgDiv.style.borderRadius = '4px';
+      msgDiv.style.color = 'white';
+      messages.appendChild(msgDiv);
+
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+  </script>
+
 </body>
-      </html>
+</html>
