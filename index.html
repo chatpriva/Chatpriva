@@ -1,58 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>VaultBox Chat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VaultBox</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #121212; color: white; }
-    #messages { max-height: 400px; overflow-y: scroll; margin-bottom: 10px; border: 1px solid #444; padding: 10px; }
-    .message { margin-bottom: 5px; }
-    input, button { padding: 10px; font-size: 16px; }
-    #sendBtn { background: #4CAF50; color: white; border: none; cursor: pointer; }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .container {
+      text-align: center;
+      max-width: 300px;
+    }
+    input[type="password"] {
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background-color: #1f1f1f;
+      color: white;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background-color: #6200ee;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #chatSection {
+      display: none;
+      margin-top: 20px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      background-color: #03dac6;
+      color: black;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
-  <h2>VaultBox Chat</h2>
-  <div id="messages"></div>
-  <input type="text" id="messageInput" placeholder="Digite sua mensagem...">
-  <button id="sendBtn">Enviar</button>
+  <div class="container">
+    <h2>Digite a senha para acessar</h2>
+    <input type="password" id="passwordInput" placeholder="Senha de acesso" />
+    <button onclick="checkPassword()">Entrar</button>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <div id="chatSection">
+      <p>Clique abaixo para entrar no chat:</p>
+      <a id="chatLink" href="https://qwert12345s-team-2.adalo.com/vaultbox111" target="_blank">Entrar no Chat</a>
+    </div>
+  </div>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBO66blfTWDG9PPmWddQs3n-Fmj6bufBow",
-      authDomain: "vaultbox-876f9.firebaseapp.com",
-      databaseURL: "https://vaultbox-876f9-default-rtdb.firebaseio.com",
-      projectId: "vaultbox-876f9",
-      storageBucket: "vaultbox-876f9.appspot.com",
-      messagingSenderId: "499854233557",
-      appId: "1:499854233557:web:e51d8c86a063868ae1b75c"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const messagesRef = db.ref("messages");
-
-    document.getElementById("sendBtn").onclick = () => {
-      const input = document.getElementById("messageInput");
-      const message = input.value.trim();
-      if (message) {
-        messagesRef.push({ text: message });
-        input.value = "";
+    function checkPassword() {
+      const password = document.getElementById('passwordInput').value;
+      if (password === '458') {
+        document.getElementById('chatSection').style.display = 'block';
+      } else {
+        alert('Senha incorreta');
       }
-    };
-
-    messagesRef.on("child_added", (data) => {
-      const msg = data.val().text;
-      const div = document.createElement("div");
-      div.className = "message";
-      div.textContent = msg;
-      document.getElementById("messages").appendChild(div);
-    });
+    }
   </script>
 </body>
 </html>
