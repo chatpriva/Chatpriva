@@ -2,119 +2,94 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Calculadora de Surebet - Lúcifer</title>
+  <title>Calculadora de Surebet</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #0e0e0e;
+      font-family: Arial, sans-serif;
+      background: #111;
       color: #f0f0f0;
       padding: 20px;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6a/Sigil_of_Lucifer.svg');
-      background-repeat: no-repeat;
-      background-position: center top;
-      background-size: 150px;
     }
-
     .container {
-      background: rgba(20, 20, 20, 0.9);
-      padding: 25px;
-      max-width: 400px;
-      margin: 160px auto 0 auto;
-      border-radius: 12px;
-      box-shadow: 0 0 20px red;
-      border: 1px solid crimson;
+      max-width: 500px;
+      margin: auto;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: crimson;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-      color: #ddd;
-    }
-
     input {
       width: 100%;
-      padding: 8px;
-      background: #1c1c1c;
-      border: 1px solid #444;
-      color: white;
-      margin-top: 5px;
-      border-radius: 4px;
-    }
-
-    button {
-      margin-top: 20px;
       padding: 10px;
-      width: 100%;
-      background: crimson;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      background: #28a745;
       color: white;
       border: none;
       border-radius: 5px;
-      font-weight: bold;
       cursor: pointer;
     }
-
-    button:hover {
-      background: darkred;
-    }
-
-    .result {
+    .resultado {
       margin-top: 20px;
+      background: #333;
       padding: 15px;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 5px;
-      color: #b0ffb0;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Surebet de Lúcifer</h2>
+    <h2>Calculadora de Surebet</h2>
+    <label>Odd 1:</label>
+    <input type="number" step="0.01" id="odd1" placeholder="Ex: 2.20">
 
-    <label for="odds1">Odd 1</label>
-    <input type="number" id="odds1" step="0.01" required>
+    <label>Odd 2:</label>
+    <input type="number" step="0.01" id="odd2" placeholder="Ex: 2.10">
 
-    <label for="odds2">Odd 2</label>
-    <input type="number" id="odds2" step="0.01" required>
+    <label>Valor total a apostar (R$):</label>
+    <input type="number" step="0.01" id="valorTotal" placeholder="Ex: 200">
 
-    <label for="totalStake">Valor total da aposta (R$)</label>
-    <input type="number" id="totalStake" step="0.01" required>
+    <button onclick="calcularSurebet()">Calcular</button>
 
-    <button onclick="calcular()">Invocar Lucro</button>
-
-    <div class="result" id="resultado"></div>
+    <div class="resultado" id="resultado"></div>
   </div>
 
   <script>
-    function calcular() {
-      const odd1 = parseFloat(document.getElementById("odds1").value);
-      const odd2 = parseFloat(document.getElementById("odds2").value);
-      const total = parseFloat(document.getElementById("totalStake").value);
+    function calcularSurebet() {
+      const odd1 = parseFloat(document.getElementById('odd1').value);
+      const odd2 = parseFloat(document.getElementById('odd2').value);
+      const valorTotal = parseFloat(document.getElementById('valorTotal').value);
+      const res = document.getElementById('resultado');
 
-      const prob1 = 1 / odd1;
-      const prob2 = 1 / odd2;
-      const soma = prob1 + prob2;
-
-      if (soma >= 1) {
-        document.getElementById("resultado").innerHTML = "Essa combinação não é uma surebet.";
+      if (!odd1 || !odd2 || !valorTotal) {
+        res.innerHTML = 'Preencha todos os campos.';
         return;
       }
 
-      const stake1 = total * (prob2 / soma);
-      const stake2 = total * (prob1 / soma);
-      const retorno = Math.min(stake1 * odd1, stake2 * odd2);
-      const lucro = retorno - total;
+      const inv1 = 1 / odd1;
+      const inv2 = 1 / odd2;
+      const somaInv = inv1 + inv2;
 
-      document.getElementById("resultado").innerHTML = `
-        Aposte <strong>R$ ${stake1.toFixed(2)}</strong> na odd ${odd1}<br>
-        Aposte <strong>R$ ${stake2.toFixed(2)}</strong> na odd ${odd2}<br><br>
-        Lucro garantido: <strong>R$ ${lucro.toFixed(2)}</strong>
+      const temSurebet = somaInv < 1;
+      const aposta1 = valorTotal * (inv1 / somaInv);
+      const aposta2 = valorTotal * (inv2 / somaInv);
+
+      const retorno1 = aposta1 * odd1;
+      const retorno2 = aposta2 * odd2;
+      const lucro1 = retorno1 - valorTotal;
+      const lucro2 = retorno2 - valorTotal;
+
+      res.innerHTML = `
+        <strong>${temSurebet ? 'Surebet encontrada!' : 'Não é uma Surebet!'}</strong><br><br>
+        Apostar R$${aposta1.toFixed(2)} na odd ${odd1}<br>
+        Apostar R$${aposta2.toFixed(2)} na odd ${odd2}<br><br>
+        Lucro garantido:<br>
+        Se vencer odd ${odd1} → R$${lucro1.toFixed(2)}<br>
+        Se vencer odd ${odd2} → R$${lucro2.toFixed(2)}<br>
       `;
     }
   </script>
