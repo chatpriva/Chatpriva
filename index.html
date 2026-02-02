@@ -9,9 +9,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #000000 0%, #1a0a0f 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            padding-bottom: 30px;
+            color: #ffffff; min-height: 100vh; padding-bottom: 30px;
         }
         .container { max-width: 100%; padding: 15px; margin: 0 auto; }
         header {
@@ -20,121 +18,130 @@
             box-shadow: 0 8px 20px rgba(194, 24, 91, 0.4);
         }
         header h1 { font-size: 32px; text-align: center; margin-bottom: 15px; letter-spacing: 3px; }
-        .total-geral { text-align: center; background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; position: relative; }
+        .total-geral { text-align: center; background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; }
         .total-geral h2 { font-size: 28px; color: #ff4081; }
-        .main-buttons { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        
+        .main-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
         .btn-primary {
             background: linear-gradient(135deg, #c2185b 0%, #880e4f 100%);
-            color: white; border: none; padding: 15px 20px; border-radius: 10px;
-            font-size: 16px; font-weight: bold; width: 100%;
+            color: white; border: none; padding: 15px; border-radius: 10px;
+            font-size: 16px; font-weight: bold; width: 100%; cursor: pointer;
         }
         .btn-secondary {
-            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
-            color: #ff4081; border: 2px solid #c2185b; padding: 15px 20px;
-            border-radius: 10px; font-size: 16px; font-weight: bold; width: 100%;
+            background: #1a1a1a; color: #ff4081; border: 2px solid #c2185b;
+            padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer;
         }
+
         .cliente-card {
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            border: 2px solid #c2185b; border-radius: 12px; padding: 18px;
-            margin-bottom: 15px; box-shadow: 0 4px 15px rgba(194, 24, 91, 0.2);
+            background: #1a1a1a; border: 2px solid #c2185b; border-radius: 12px;
+            padding: 18px; margin-bottom: 15px;
         }
-        .cliente-card h3 { color: #ff4081; margin-bottom: 8px; }
-        .cliente-card .total { font-size: 22px; font-weight: bold; color: #ff4081; }
+        .cliente-card h3 { color: #ff4081; margin-bottom: 5px; }
+        .cliente-card .total { font-size: 20px; font-weight: bold; color: #ff4081; }
+
+        /* MODAIS */
         .modal {
             display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);
-            overflow-y: auto; padding: 20px;
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
+            padding: 20px; overflow-y: auto;
         }
+        /* Garantir que os modais de ação fiquem na frente do de detalhes */
+        #modalAdicionarDivida, #modalPagamento { z-index: 2000; }
+
         .modal-content {
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            margin: 10% auto; padding: 25px; border: 2px solid #c2185b;
-            border-radius: 15px; max-width: 500px; width: 95%;
+            background: #222; margin: 5% auto; padding: 20px;
+            border: 2px solid #c2185b; border-radius: 15px; max-width: 500px;
         }
         input {
-            width: 100%; padding: 15px; margin-bottom: 15px;
-            border: 2px solid #c2185b; border-radius: 8px;
-            background: #1a1a1a; color: white; font-size: 16px;
+            width: 100%; padding: 15px; margin: 10px 0;
+            border-radius: 8px; border: 1px solid #c2185b;
+            background: #000; color: #fff; font-size: 16px;
         }
         .divida-item {
-            background: rgba(0, 0, 0, 0.4); border-left: 4px solid #c2185b;
-            padding: 15px; margin-bottom: 12px; border-radius: 8px; position: relative;
+            background: #333; padding: 12px; margin-bottom: 8px;
+            border-radius: 8px; position: relative; border-left: 4px solid #ff4081;
         }
         .btn-lixeira {
-            position: absolute; top: 10px; right: 10px; background: #880e4f;
-            color: white; border: none; width: 35px; height: 35px; border-radius: 50%;
+            position: absolute; right: 10px; top: 10px;
+            background: #880e4f; border: none; color: white;
+            width: 30px; height: 30px; border-radius: 50%;
         }
-        .btn-cancel { background: #444444; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px; }
+        .btn-cancel {
+            background: #444; color: white; border: none;
+            padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
         <header>
             <h1>AYSHA</h1>
             <div class="total-geral">
-                <p>Total Geral a Receber</p>
+                <p>Total Geral</p>
                 <h2 id="totalGeral">R$ 0,00</h2>
             </div>
         </header>
 
         <div class="main-buttons">
-            <button class="btn-primary" onclick="mostrarAdicionarCliente()">➕ Adicionar Cliente</button>
-            <button class="btn-secondary" onclick="mostrarProcurarCliente()">🔍 Procurar Cliente</button>
+            <button class="btn-primary" onclick="abrirModal('modalAdicionarCliente')">➕ Novo Cliente</button>
+            <button class="btn-secondary" onclick="abrirModal('modalProcurarCliente')">🔍 Buscar</button>
         </div>
 
-        <div id="listaClientes" class="clientes-container"></div>
+        <div id="listaClientes"></div>
     </div>
 
     <div id="modalAdicionarCliente" class="modal">
         <div class="modal-content">
             <h3>Novo Cliente</h3>
-            <input type="text" id="nomeNovoCliente" placeholder="Nome do cliente" />
-            <button class="btn-primary" onclick="adicionarCliente()">Salvar</button>
+            <input type="text" id="nomeNovoCliente" placeholder="Nome do Cliente">
+            <button class="btn-primary" onclick="adicionarCliente()">Salvar Cliente</button>
             <button class="btn-cancel" onclick="fecharModal('modalAdicionarCliente')">Cancelar</button>
         </div>
     </div>
 
     <div id="modalProcurarCliente" class="modal">
         <div class="modal-content">
-            <h3>Procurar Cliente</h3>
-            <input type="text" id="campoBusca" placeholder="Digite o nome..." oninput="buscarCliente()" />
+            <h3>Buscar Cliente</h3>
+            <input type="text" id="campoBusca" placeholder="Digite o nome..." oninput="buscarCliente()">
             <div id="resultadosBusca"></div>
             <button class="btn-cancel" onclick="fecharModal('modalProcurarCliente')">Fechar</button>
         </div>
     </div>
 
+    <div id="modalDetalhesCliente" class="modal">
+        <div class="modal-content">
+            <h2 id="nomeClienteDetalhes" style="color:#ff4081"></h2>
+            <div style="text-align:center; margin: 15px 0;">
+                <p>Dívida Atual:</p>
+                <h2 id="totalClienteDetalhes">R$ 0,00</h2>
+            </div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <button class="btn-primary" onclick="abrirModal('modalAdicionarDivida')">➕ Dívida</button>
+                <button class="btn-secondary" onclick="prepararPagamento()">💰 Pago</button>
+            </div>
+            <div id="listaDividas"></div>
+            <button class="btn-cancel" onclick="fecharModal('modalDetalhesCliente')">Voltar</button>
+        </div>
+    </div>
+
     <div id="modalAdicionarDivida" class="modal">
         <div class="modal-content">
-            <h3>Nova Dívida</h3>
-            <input type="number" id="valorDivida" placeholder="Valor (R$)" step="0.01" />
-            <input type="text" id="anotacaoDivida" placeholder="O que foi comprado?" />
-            <button class="btn-primary" onclick="salvarNovaDivida()">Adicionar</button>
-            <button class="btn-cancel" onclick="fecharModal('modalAdicionarDivida')">Cancelar</button>
+            <h3>Adicionar Valor</h3>
+            <input type="number" id="valorDivida" placeholder="Valor R$" step="0.01">
+            <input type="text" id="anotacaoDivida" placeholder="Descrição (Ex: Arroz, Doce)">
+            <button class="btn-primary" onclick="salvarNovaDivida()">Confirmar Dívida</button>
+            <button class="btn-cancel" onclick="fecharModal('modalAdicionarDivida')">Voltar</button>
         </div>
     </div>
 
     <div id="modalPagamento" class="modal">
         <div class="modal-content">
             <h3>Registrar Pagamento</h3>
-            <p id="infoClientePagamento" style="margin-bottom:15px; text-align:center;"></p>
-            <input type="number" id="valorPagamento" placeholder="Valor pago (R$)" step="0.01" />
-            <button class="btn-primary" onclick="registrarPagamento()">Confirmar</button>
-            <button class="btn-cancel" onclick="fecharModal('modalPagamento')">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="modalDetalhesCliente" class="modal">
-        <div class="modal-content">
-            <h3 id="nomeClienteDetalhes"></h3>
-            <div style="text-align:center; margin-bottom:15px;">
-                <p>Total devendo:</p>
-                <h2 id="totalClienteDetalhes" style="color:#ff4081;">R$ 0,00</h2>
-            </div>
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <button class="btn-primary" onclick="mostrarAdicionarDividaCliente()">➕ Dívida</button>
-                <button class="btn-secondary" onclick="mostrarPagamentoCliente()">💰 Pago</button>
-            </div>
-            <div id="listaDividas"></div>
-            <button class="btn-cancel" onclick="fecharModal('modalDetalhesCliente')">Voltar</button>
+            <p id="infoPagamento" style="margin-bottom:10px;"></p>
+            <input type="number" id="valorPagamento" placeholder="Quanto ele pagou? R$" step="0.01">
+            <button class="btn-primary" onclick="registrarPagamento()">Confirmar Recebimento</button>
+            <button class="btn-cancel" onclick="fecharModal('modalPagamento')">Voltar</button>
         </div>
     </div>
 
@@ -153,163 +160,145 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        const db = getDatabase(app);
 
-        // Expondo para o script global
-        window.database = database;
-        window.dbRef = ref;
-        window.dbSet = set;
-        window.dbOnValue = onValue;
+        window.dbRef = ref; window.dbSet = set; window.dbOnValue = onValue; window.database = db;
 
-        carregarDadosFirebase();
+        // Escuta o Firebase em tempo real
+        const clientesRef = ref(db, 'aysha/clientes');
+        onValue(clientesRef, (snapshot) => {
+            if (snapshot.exists()) {
+                window.clientes = Array.isArray(snapshot.val()) ? snapshot.val() : [];
+                localStorage.setItem('aysha_clientes', JSON.stringify(window.clientes));
+                window.atualizarInterface();
+                if(window.clienteSelecionado !== null) window.atualizarDetalhesCliente();
+            }
+        });
     </script>
 
     <script>
-        let clientes = [];
-        let clienteSelecionado = null;
+        window.clientes = JSON.parse(localStorage.getItem('aysha_clientes')) || [];
+        window.clienteSelecionado = null;
 
-        async function carregarDadosFirebase() {
-            // Carrega local primeiro para velocidade
-            const local = localStorage.getItem('aysha_clientes');
-            if (local) { clientes = JSON.parse(local); atualizarInterface(); }
+        function abrirModal(id) { document.getElementById(id).style.display = 'block'; }
+        function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
 
-            if (window.dbOnValue) {
-                const clientesRef = window.dbRef(window.database, 'aysha/clientes');
-                window.dbOnValue(clientesRef, (snap) => {
-                    if (snap.exists()) {
-                        clientes = Array.isArray(snap.val()) ? snap.val() : [];
-                        localStorage.setItem('aysha_clientes', JSON.stringify(clientes));
-                        atualizarInterface();
-                    }
-                });
-            }
-        }
-
-        async function salvarDados() {
-            localStorage.setItem('aysha_clientes', JSON.stringify(clientes));
+        async function sincronizar() {
+            localStorage.setItem('aysha_clientes', JSON.stringify(window.clientes));
             if (window.dbSet) {
-                const clientesRef = window.dbRef(window.database, 'aysha/clientes');
-                await window.dbSet(clientesRef, clientes);
+                await window.dbSet(window.dbRef(window.database, 'aysha/clientes'), window.clientes);
             }
-            atualizarInterface();
+            window.atualizarInterface();
         }
 
-        function atualizarInterface() {
-            let total = 0;
-            clientes.forEach(c => (c.dividas || []).forEach(d => total += d.valor));
-            document.getElementById('totalGeral').textContent = formatarDinheiro(total);
-            
+        window.atualizarInterface = function() {
+            let totalGeral = 0;
             const container = document.getElementById('listaClientes');
-            if (clientes.length === 0) {
-                container.innerHTML = '<p style="text-align:center; opacity:0.5;">Nenhum cliente.</p>';
-                return;
-            }
             container.innerHTML = '';
-            clientes.forEach((c, i) => {
-                let tC = 0; (c.dividas || []).forEach(d => tC += d.valor);
-                const div = document.createElement('div');
-                div.className = 'cliente-card';
-                div.onclick = () => abrirDetalhesCliente(i);
-                div.innerHTML = `<h3>${c.nome}</h3><p class="total">${formatarDinheiro(tC)}</p>`;
-                container.appendChild(div);
+
+            window.clientes.forEach((c, i) => {
+                let t = 0; (c.dividas || []).forEach(d => t += d.valor);
+                totalGeral += t;
+                const card = document.createElement('div');
+                card.className = 'cliente-card';
+                card.onclick = () => abrirDetalhes(i);
+                card.innerHTML = `<h3>${c.nome}</h3><p class="total">${formatar(t)}</p>`;
+                container.appendChild(card);
             });
+            document.getElementById('totalGeral').textContent = formatar(totalGeral);
         }
 
-        function formatarDinheiro(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
-        
-        function abrirDetalhesCliente(i) {
-            clienteSelecionado = i;
-            document.getElementById('nomeClienteDetalhes').textContent = clientes[i].nome;
-            atualizarDetalhesCliente();
-            document.getElementById('modalDetalhesCliente').style.display = 'block';
+        function abrirDetalhes(i) {
+            window.clienteSelecionado = i;
+            document.getElementById('nomeClienteDetalhes').textContent = window.clientes[i].nome;
+            window.atualizarDetalhesCliente();
+            abrirModal('modalDetalhesCliente');
         }
 
-        function atualizarDetalhesCliente() {
-            const c = clientes[clienteSelecionado];
+        window.atualizarDetalhesCliente = function() {
+            const c = window.clientes[window.clienteSelecionado];
             let t = 0; (c.dividas || []).forEach(d => t += d.valor);
-            document.getElementById('totalClienteDetalhes').textContent = formatarDinheiro(t);
+            document.getElementById('totalClienteDetalhes').textContent = formatar(t);
             const lista = document.getElementById('listaDividas');
             lista.innerHTML = '';
             (c.dividas || []).forEach((d, idx) => {
                 const item = document.createElement('div');
                 item.className = 'divida-item';
-                item.innerHTML = `<div>${d.data} - ${d.descricao}</div><strong>${formatarDinheiro(d.valor)}</strong>
+                item.innerHTML = `<div>${d.data} - ${d.desc}</div><strong>${formatar(d.valor)}</strong>
                 <button class="btn-lixeira" onclick="excluirDivida(${idx})">🗑️</button>`;
                 lista.appendChild(item);
             });
         }
 
         function adicionarCliente() {
-            const nome = document.getElementById('nomeNovoCliente').value.trim();
-            if (!nome) return;
-            clientes.push({ nome, dividas: [] });
-            salvarDados();
+            const n = document.getElementById('nomeNovoCliente').value;
+            if(!n) return;
+            window.clientes.push({ nome: n, dividas: [] });
+            sincronizar();
             fecharModal('modalAdicionarCliente');
+            document.getElementById('nomeNovoCliente').value = '';
         }
 
         function salvarNovaDivida() {
-            const valor = parseFloat(document.getElementById('valorDivida').value);
-            const desc = document.getElementById('anotacaoDivida').value;
-            if (!valor || !desc) return;
-            if (!clientes[clienteSelecionado].dividas) clientes[clienteSelecionado].dividas = [];
-            clientes[clienteSelecionado].dividas.push({
-                data: new Date().toLocaleDateString('pt-BR'),
-                descricao: desc,
-                valor: valor
+            const v = parseFloat(document.getElementById('valorDivida').value);
+            const d = document.getElementById('anotacaoDivida').value;
+            if(!v || !d) return;
+            if(!window.clientes[window.clienteSelecionado].dividas) window.clientes[window.clienteSelecionado].dividas = [];
+            window.clientes[window.clienteSelecionado].dividas.push({
+                valor: v, desc: d, data: new Date().toLocaleDateString('pt-BR')
             });
-            salvarDados();
-            atualizarDetalhesCliente();
+            sincronizar();
             fecharModal('modalAdicionarDivida');
+            document.getElementById('valorDivida').value = '';
+            document.getElementById('anotacaoDivida').value = '';
         }
 
-        function excluirDivida(idx) {
-            if (confirm('Excluir?')) {
-                clientes[clienteSelecionado].dividas.splice(idx, 1);
-                salvarDados();
-                atualizarDetalhesCliente();
-            }
+        function prepararPagamento() {
+            const c = window.clientes[window.clienteSelecionado];
+            let t = 0; (c.dividas || []).forEach(d => t += d.valor);
+            document.getElementById('infoPagamento').textContent = `${c.nome} deve ${formatar(t)}`;
+            abrirModal('modalPagamento');
         }
 
         function registrarPagamento() {
             const pago = parseFloat(document.getElementById('valorPagamento').value);
-            if (!pago || pago <= 0) return;
+            if(!pago) return;
             let rests = pago;
-            let divs = clientes[clienteSelecionado].dividas || [];
-            while (rests > 0 && divs.length > 0) {
-                if (divs[0].valor <= rests) { rests -= divs[0].valor; divs.shift(); }
+            let divs = window.clientes[window.clienteSelecionado].dividas || [];
+            while(rests > 0 && divs.length > 0) {
+                if(divs[0].valor <= rests) { rests -= divs[0].valor; divs.shift(); }
                 else { divs[0].valor -= rests; rests = 0; }
             }
-            salvarDados();
-            atualizarDetalhesCliente();
+            sincronizar();
             fecharModal('modalPagamento');
+            document.getElementById('valorPagamento').value = '';
         }
 
-        // Funções de Modal simples
-        window.mostrarAdicionarCliente = () => document.getElementById('modalAdicionarCliente').style.display = 'block';
-        window.mostrarProcurarCliente = () => document.getElementById('modalProcurarCliente').style.display = 'block';
-        window.mostrarAdicionarDividaCliente = () => document.getElementById('modalAdicionarDivida').style.display = 'block';
-        window.mostrarPagamentoCliente = () => {
-            const c = clientes[clienteSelecionado];
-            let t = 0; (c.dividas || []).forEach(d => t += d.valor);
-            document.getElementById('infoClientePagamento').textContent = `${c.nome} deve ${formatarDinheiro(t)}`;
-            document.getElementById('modalPagamento').style.display = 'block';
-        };
-        window.fecharModal = (id) => document.getElementById(id).style.display = 'none';
-        
-        window.buscarCliente = () => {
+        function excluirDivida(idx) {
+            if(confirm('Apagar esta dívida?')) {
+                window.clientes[window.clienteSelecionado].dividas.splice(idx, 1);
+                sincronizar();
+            }
+        }
+
+        function buscarCliente() {
             const t = document.getElementById('campoBusca').value.toLowerCase();
             const res = document.getElementById('resultadosBusca');
             res.innerHTML = '';
-            clientes.forEach((c, i) => {
-                if (c.nome.toLowerCase().includes(t)) {
-                    const d = document.createElement('div');
-                    d.style = "padding:10px; border-bottom:1px solid #c2185b; cursor:pointer;";
-                    d.textContent = c.nome;
-                    d.onclick = () => { fecharModal('modalProcurarCliente'); abrirDetalhesCliente(i); };
-                    res.appendChild(d);
+            window.clientes.forEach((c, i) => {
+                if(c.nome.toLowerCase().includes(t)) {
+                    const item = document.createElement('div');
+                    item.style = "padding:15px; border-bottom:1px solid #c2185b; cursor:pointer";
+                    item.textContent = c.nome;
+                    item.onclick = () => { fecharModal('modalProcurarCliente'); abrirDetalhes(i); };
+                    res.appendChild(item);
                 }
             });
-        };
+        }
+
+        function formatar(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+
+        window.onload = () => window.atualizarInterface();
     </script>
 </body>
 </html>
